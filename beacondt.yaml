@@ -11,8 +11,7 @@ metadata:
     app: beacondt
 spec:
   ports:
-  - port: 9988
-    targetPort: 9998
+  - port: 4050
     name: http
   selector:
     app: beacondt
@@ -33,20 +32,33 @@ spec:
       labels:
         app: beacondt
         version: v4
-      annotations:
+      annotations: 
         consul.hashicorp.com/connect-inject: 'true'
+        'consul.hashicorp.com/connect-service-upstreams': 'beacondt:9998:dc2'
     spec:
       containers:
       - name: beacondt
-        image: timfa/a1pe:beacon
+        image: fosterACR.azurecr.io/foster:4.0
         env:
         - name: FOSTER_SERVICE
-          value: /tgcs/1.0.0
+          value: ""
+        - name: FOSTER_PORT
+          value: "4050"
+        - name: FOSTER_CLOUD_GW
+          value: "http://localhost:9998"
+        - name: FOSTER_APIM
+          value: "https://preprodapim.umbrellaiot.com:9443"
+        - name: FOSTER_TOKEN
+          value: "<APPTOKEN>"
+        - name: FOSTER_STORAGE
+          value: "false"
+        - name: FOSTER_DUPLICATE
+          value: "false"
         resources:
           requests:
-            cpu: 100m
+            cpu: "100m"
         imagePullPolicy: Always
         ports:
-        - containerPort: 9998
+        - containerPort: 4050
       imagePullSecrets:
         - name: foster

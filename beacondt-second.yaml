@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-    name: beacondt-second
+  name: beacondt-second
 ---
 apiVersion: v1
 kind: Service
@@ -11,20 +11,29 @@ metadata:
     app: beacondt-second
 spec:
   ports:
-  - port: 9989
-    targetPort: 9998   
+  - port: 4020
+    targetPort: 4020
     name: http
+    protocol: TCP
+  - port: 7400
+    targetPort: 7400
+    name: dds1
+    protocol: UDP
+  - port: 7411
+    targetPort: 7411
+    name: dds2
+    protocol: UDP
   selector:
     app: beacondt-second
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: beacondt-second-v4
+  name: beacondt-second-v1
   labels:
     version: v4
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: beacondt-second
@@ -32,21 +41,60 @@ spec:
     metadata:
       labels:
         app: beacondt-second
-        version: v4
-      annotations:
+        version: v1
+      annotations:  
         consul.hashicorp.com/connect-inject: 'true'
+        'consul.hashicorp.com/connect-service-upstreams': 'beacondt-shadow:9987:dc1'
     spec:
       containers:
-      - name: beacondt-second
-        image: timfa/a1pe:beacon
-        env:
-        - name: FOSTER_SERVICE
-          value: /tgcs/1.0.0
+      - name: postgres
+        image: fosterACR.azurecr.io/apimpostgres:4.0.0
         resources:
           requests:
-            cpu: 100m
+            cpu: "10m"
         imagePullPolicy: Always
         ports:
-        - containerPort: 9998
+        - containerPort: 4020
+        envFrom:
+            - configMapRef:
+                name: postgres-config
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres
+      - name: fostercoresecond
+        image: fosterACR.azurecr.io/foster:4.0
+        env:
+        - name: FOSTER_SERVICE
+          value: ""
+        - name: FOSTER_PORT
+          value: "4020"
+        - name: FOSTER_CLOUD_GW
+          value: "http://127.0.0.1:9987"
+        - name: FOSTER_APIM
+          value: "https://preprodapim.umbrellaiot.com:9443"
+        - name: FOSTER_TOKEN
+          value: "<APPTOKEN>"
+        - name: FOSTER_STORAGE
+          value: "true"
+        - name: FOSTER_PREFIX
+          value: "%"
+        - name: FOSTER_RESYNC
+          value: "https://preprodapim.umbrellaiot.com:9095/tgcs/1.0.0"
+        - name: FOSTER_DUPLICATE
+          value: "true"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "10m"
       imagePullSecrets:
         - name: foster
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      volumes:
+      - name: postgres
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+      hostAliases:
+       - ip: 127.0.0.1
+         hostnames:
+           - foster
