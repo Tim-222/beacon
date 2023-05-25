@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    name: beacondtshadow-second
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacondtshadow-second
+  labels:
+    app: beacondtshadow-second
+spec:
+  ports:
+  - port: 9986
+    targetPort: 9998   
+    name: http
+  selector:
+    app: beacondtshadow-second
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacondtshadow-second-v4
+  labels:
+    version: v4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beacondtshadow-second
+  template:
+    metadata:
+      labels:
+        app: beacondtshadow-second
+        version: v4
+      annotations:
+        consul.hashicorp.com/connect-inject: 'true'
+    spec:
+      containers:
+      - name: beacondtshadow-second
+        image: timfa/a1pe:beacon
+        env:
+        - name: FOSTER_SERVICE
+          value: /tgcs/1.0.0
+        resources:
+          requests:
+            cpu: 100m
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9998
+      imagePullSecrets:
+        - name: foster
