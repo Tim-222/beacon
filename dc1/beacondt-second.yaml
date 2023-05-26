@@ -45,6 +45,7 @@ spec:
       annotations:  
         consul.hashicorp.com/connect-inject: 'true'
         'consul.hashicorp.com/connect-service-upstreams': 'beacondt-shadow:9987:dc1'
+        'consul.hashicorp.com/connect-service-upstreams': 'beacondt:9998:dc2'
     spec:
       containers:
       - name: postgres
@@ -79,7 +80,7 @@ spec:
         - name: FOSTER_PREFIX
           value: "%"
         - name: FOSTER_RESYNC
-          value: "https://preprodapim.umbrellaiot.com:9095/tgcs/1.0.0"
+          value: "http://127.0.0.1:9998"
         - name: FOSTER_DUPLICATE
           value: "true"
         imagePullPolicy: Always
