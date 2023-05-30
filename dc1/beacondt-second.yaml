@@ -44,7 +44,7 @@ spec:
         version: v1
       annotations:  
         consul.hashicorp.com/connect-inject: 'true'
-        'consul.hashicorp.com/connect-service-upstreams': 'beacondtshadow:9987:dc1, beacondt:9998:dc2'
+        'consul.hashicorp.com/connect-service-upstreams': 'beacondtshadow:9987:dc1 beacondt:9998:dc2'
     spec:
       containers:
       - name: postgres
