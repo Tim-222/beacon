@@ -39,9 +39,6 @@ spec:
       containers:
       - name: beacondtshadow
         image: timfa/a1pe:beacon
-        env:
-        - name: FOSTER_SERVICE
-          value: /tgcs/1.0.0
         resources:
           requests:
             cpu: 100m
