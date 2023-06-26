@@ -38,6 +38,12 @@ spec:
     spec:
       containers:
       - name: beacondt
+        image: lipeizheng/docker-b5gdt       
+        resources:
+          requests:
+            cpu: 100m
+        imagePullPolicy: Always
+      - name: a1pe
         image: timfa/a1pe:beacon       
         resources:
           requests:
