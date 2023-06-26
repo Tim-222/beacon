@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
       - name: beacondt
-        image: lipeizheng/docker-b5gdt       
+        image: beaconacr.azurecr.io/beacondt       
         resources:
           requests:
             cpu: 100m
@@ -52,4 +52,4 @@ spec:
         ports:
         - containerPort: 9998
       imagePullSecrets:
-        - name: foster
+        - name: beacon
