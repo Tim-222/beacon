@@ -38,6 +38,12 @@ spec:
     spec:
       containers:
       - name: beacondtshadow
+        image: beaconacr.azurecr.io/beacondt       
+        resources:
+          requests:
+            cpu: 100m
+        imagePullPolicy: Always
+      - name: a1pe
         image: timfa/a1pe:beacon
         resources:
           requests:
@@ -46,4 +52,4 @@ spec:
         ports:
         - containerPort: 9998
       imagePullSecrets:
-        - name: foster
+        - name: beacon
