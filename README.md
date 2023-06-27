@@ -4,4 +4,4 @@ The annotations required for injection of sidecars are :
       annotations:
         consul.hashicorp.com/connect-inject: 'true'
 
-If license files are needed for the digital twin deployment (such as Matlab) then they should be available in the licenses-pvc-claim. 
+If license files are needed for the digital twin deployment (such as Matlab) then they should be available in the licenses-pv-claim Persistent volume. 
