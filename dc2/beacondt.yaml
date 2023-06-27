@@ -37,10 +37,16 @@ spec:
     spec:
       containers:
       - name: beacondt
-        image: timfa/a1pe:beacon
-        env:
-        - name: FOSTER_SERVICE
-          value: /tgcs/1.0.0
+        image: beaconacr.azurecr.io/beacondt       
+        resources:
+          requests:
+            cpu: 100m
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /opt/matlab/licenses
+            name: licenses
+      - name: a1pe
+        image: timfa/a1pe:beacon       
         resources:
           requests:
             cpu: 100m
@@ -48,4 +54,8 @@ spec:
         ports:
         - containerPort: 9998
       imagePullSecrets:
-        - name: foster
+        - name: beacon
+      volumes:
+      - name: licenses
+        persistentVolumeClaim:
+          claimName: licenses-pv-claim
