@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
       - name: beacondt
-        image: beaconacr.azurecr.io/beacondt       
+        image: beaconacr.azurecr.io/beacondt:test       
         resources:
           requests:
             cpu: 100m
