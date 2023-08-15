@@ -56,6 +56,7 @@ spec:
         - containerPort: 9998
       imagePullSecrets:
         - name: beacon
+        - name: foster
       volumes:
       - name: licenses
         persistentVolumeClaim:
