@@ -54,7 +54,7 @@ spec:
             cpu: "10m"
         imagePullPolicy: Always
         ports:
-        - containerPort: 4020
+        - containerPort: 5432
         envFrom:
             - configMapRef:
                 name: postgres-config
@@ -83,6 +83,8 @@ spec:
         - name: FOSTER_DUPLICATE
           value: "true"
         imagePullPolicy: Always
+        ports:
+        - containerPort: 4020
         resources:
           requests:
             cpu: "10m"
