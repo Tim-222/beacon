@@ -69,6 +69,6 @@ spec:
           requests:
             cpu: "10m"
         ports:
-        - containerPort: 4050
+        - containerPort: 4080
       imagePullSecrets:
         - name: foster
